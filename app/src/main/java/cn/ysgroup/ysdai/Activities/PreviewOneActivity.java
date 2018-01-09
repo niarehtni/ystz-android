@@ -49,6 +49,7 @@ import cn.ysgroup.ysdai.UI.IconFontTextView;
 import cn.ysgroup.ysdai.UI.LoadingDialog;
 import cn.ysgroup.ysdai.Util.AppConstants;
 import cn.ysgroup.ysdai.Util.PreferenceUtil;
+import cn.ysgroup.ysdai.Util.UserConfig;
 import cn.ysgroup.ysdai.Util.Utils;
 
 //主页进入的投资页面
@@ -178,7 +179,7 @@ public class PreviewOneActivity extends MyBaseActivity {
         mTotalProgress = projectItem.getShowSchedule();
         toolBarTitleText.setText(projectItem.getName());
         final String lowestTender = projectItem.getLowestAccount();
-        timeLimit = projectItem.getExpireDate();
+        timeLimit = projectItem.getTimeLimit();
         final int id = projectItem.getId();
         final String borImg = projectItem.getBorImage();
 //        up.setTitle(projectItem.getName());
@@ -606,11 +607,15 @@ public class PreviewOneActivity extends MyBaseActivity {
                             //请求成功
                             isBound = true;
                             isBoundVerify = true;
+
+                            UserConfig.getInstance().setIsBind(true);
                         } else if (recharge.getRcd().equals("E0001")) {
                             Toast.makeText(PreviewOneActivity.this, "登录已过期，请重新登录", Toast.LENGTH_SHORT).show();
                         } else if (recharge.getRcd().equals("M00010")) {
                             //没有绑定银行卡 点击确定进入绑卡页面
                             isBound = false;
+
+                            UserConfig.getInstance().setIsBind(false);
                         }
                         else if (recharge.getRcd().equals("M00020")) {
                             //没有绑定银行卡 点击确定进入绑卡页面

@@ -147,7 +147,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="15dp"
         android:paddingLeft="15dp"
-        android:text="如有疑问请致电乐商贷客服 400-057-7820"
+        android:text="如有疑问请致电乐商贷客服 400-856-0788"
         android:textColor="@color/colorTextHint"
         android:textSize="@dimen/s12" />
 

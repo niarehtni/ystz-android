@@ -51,6 +51,7 @@ public class ArticleActivity extends MyBaseActivity {
         WebSettings settings = articleWebView.getSettings();
         settings.setLoadWithOverviewMode(true);
         settings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
+        articleWebView.setHorizontalScrollBarEnabled(false);
         RequestForListData(basicUrl, id);
 
 

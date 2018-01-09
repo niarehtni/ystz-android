@@ -32,12 +32,13 @@ import cn.ysgroup.ysdai.Util.ApiUtil;
 import cn.ysgroup.ysdai.Util.AppConstants;
 import cn.ysgroup.ysdai.Util.PreferenceUtil;
 import cn.ysgroup.ysdai.Util.ToastUtil;
+import cn.ysgroup.ysdai.Util.UserConfig;
 
 /**
  * Created by zenglulin on 2017/9/26.
  */
 
-public class BankCardBindVerifyActivity extends MyBaseActivity{
+public class BankCardBindVerifyActivity extends MyBaseActivity {
     @Bind(R.id.bank_card_bind_getcode_btn)
     Button getCodeBtn;
 
@@ -60,7 +61,7 @@ public class BankCardBindVerifyActivity extends MyBaseActivity{
 
     }
 
-    public void onNewIntent(Intent newIntent){
+    public void onNewIntent(Intent newIntent) {
         setIntent(newIntent);
         resetUI();
     }
@@ -76,14 +77,14 @@ public class BankCardBindVerifyActivity extends MyBaseActivity{
     }
 
     @OnClick(R.id.bank_card_bind_getcode_btn)
-    public void doGetCodeBtn(){
+    public void doGetCodeBtn() {
         getCodeBtn.setEnabled(false);
         requestSendVCodeAagin();
 
     }
 
     @OnClick(R.id.bank_card_bind_sure_btn)
-    public void doBankCardBind(){
+    public void doBankCardBind() {
         if (checkLoginForm()) {
             requestBindBankCard();
         }
@@ -101,26 +102,25 @@ public class BankCardBindVerifyActivity extends MyBaseActivity{
         }
     }
 
-    private void requestBindBankCard(){
+    private void requestBindBankCard() {
         if (loadingDialog == null) {
             loadingDialog = new LoadingDialog(this);
             loadingDialog.show();
         }
 
-        Map<String,String> postParams = new HashMap<>();
+        Map<String, String> postParams = new HashMap<>();
         postParams.put("token", PreferenceUtil.getPrefString(this, "loginToken", ""));
         postParams.put("checkCode", codeInput.getText().toString());
         ApiUtil.getInstance().sendPostRequest(AppConstants.URL_BANKCARD_BIND_PHONE_VCODE,
                 postParams, bindCardCallback);
     }
 
-    private void requestSendVCodeAagin(){
-        Map<String,String> postParams = new HashMap<>();
+    private void requestSendVCodeAagin() {
+        Map<String, String> postParams = new HashMap<>();
         postParams.put("token", PreferenceUtil.getPrefString(this, "loginToken", ""));
         ApiUtil.getInstance().sendPostRequest(AppConstants.URL_BANKCARD_BIND_SEND_VCODE_AGAIN,
                 postParams, sendVCodeCallback);
     }
-
 
 
     @Override
@@ -130,13 +130,13 @@ public class BankCardBindVerifyActivity extends MyBaseActivity{
     }
 
     private boolean checkLoginForm() {
-        if(!checkInput()){
+        if (!checkInput()) {
             return false;
         }
         return true;
     }
 
-    protected boolean checkInput(){
+    protected boolean checkInput() {
         String vCode = codeInput.getText().toString();
         if (TextUtils.isEmpty(vCode)) {
             ToastUtil.showToast(this, getString(R.string.need_vcode_tip));
@@ -193,22 +193,21 @@ public class BankCardBindVerifyActivity extends MyBaseActivity{
 
             int code = response.code();
 
-            if(code == HttpURLConnection.HTTP_OK){
-                BaseBean result = JSON.parseObject(response.body().string(),BaseBean.class);
+            if (code == HttpURLConnection.HTTP_OK) {
+                BaseBean result = JSON.parseObject(response.body().string(), BaseBean.class);
 
-                if(result.isOk()){
+                if (result.isOk()) {
                     //
                     mHandler.sendEmptyMessage(MESSAGE_SEND_CODE_SUC);
-                }else if(result.isLoginExpired()){
+                } else if (result.isLoginExpired()) {
                     mHandler.sendEmptyMessage(AppConstants.MESSAGE_LOGIN_EXPIRED);
-                }
-                else{
+                } else {
                     Message msg = Message.obtain();
                     msg.what = MESSAGE_SEND_CODE_FAIL;
                     msg.obj = result.getRmg();
                     mHandler.sendMessage(msg);
                 }
-            }else{
+            } else {
                 mHandler.sendEmptyMessage(AppConstants.MESSAGE_NETWORK_ERROR);
             }
         }
@@ -224,21 +223,21 @@ public class BankCardBindVerifyActivity extends MyBaseActivity{
         public void onResponse(Response response) throws IOException {
             int code = response.code();
 
-            if(code == HttpURLConnection.HTTP_OK){
-                BaseBean result = JSON.parseObject(response.body().string(),BaseBean.class);
+            if (code == HttpURLConnection.HTTP_OK) {
+                BaseBean result = JSON.parseObject(response.body().string(), BaseBean.class);
 
-                if(null != result && result.isOk()){
+                if (null != result && result.isOk()) {
                     //
                     mHandler.sendEmptyMessage(MESSAGE_BIND_CARD_SUC);
-                }else if(result.isLoginExpired()){
+                } else if (result.isLoginExpired()) {
                     mHandler.sendEmptyMessage(AppConstants.MESSAGE_LOGIN_EXPIRED);
-                }else{
+                } else {
                     Message msg = Message.obtain();
                     msg.what = MESSAGE_BIND_CARD_FAIL;
                     msg.obj = result.getRmg();
                     mHandler.sendMessage(msg);
                 }
-            }else{
+            } else {
                 mHandler.sendEmptyMessage(AppConstants.MESSAGE_NETWORK_ERROR);
             }
         }
@@ -257,13 +256,13 @@ public class BankCardBindVerifyActivity extends MyBaseActivity{
                     onBindCardSuc();
                     break;
                 case MESSAGE_BIND_CARD_FAIL:
-                    onBindCardFail((String)msg.obj);
+                    onBindCardFail((String) msg.obj);
                     break;
                 case MESSAGE_SEND_CODE_SUC:
                     onSendVCodeSuc();
                     break;
                 case MESSAGE_SEND_CODE_FAIL:
-                    onSendVCodeFail((String)msg.obj);
+                    onSendVCodeFail((String) msg.obj);
                     break;
 
             }
@@ -272,31 +271,30 @@ public class BankCardBindVerifyActivity extends MyBaseActivity{
         }
     };
 
-    private void onSendVCodeSuc(){
+    private void onSendVCodeSuc() {
         ToastUtil.showToast(this, "验证码发送成功,请查收短信");
         startVCodeTimer();  //发验证码接口调用成功后启动倒计时
         codeInput.requestFocus();
         codeInput.requestFocusFromTouch();
     }
 
-    private void onSendVCodeFail(String failReason){
+    private void onSendVCodeFail(String failReason) {
         ToastUtil.showToast(this, failReason);
         getCodeBtn.setEnabled(true);   //验证码发送失败后重置
         getCodeBtn.setText("重发验证码");
     }
 
-    private void onBindCardSuc(){
+    private void onBindCardSuc() {
+        UserConfig.getInstance().setIsBind(true);
         Intent intent = new Intent();
         intent.putExtras(getIntent());
         setResult(RESULT_OK, intent);
         finish();
     }
 
-    private void onBindCardFail(String failReason){
+    private void onBindCardFail(String failReason) {
         ToastUtil.showToast(this, failReason);
     }
-
-
 
 
     private static final int MESSAGE_BIND_CARD_SUC = 1;

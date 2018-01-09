@@ -17,9 +17,7 @@
         android:paddingBottom="15dp"
         android:paddingLeft="15dp"
         android:paddingRight="25dp"
-        android:paddingTop="15dp"
-
-        android:text="sfsdf" />
+        android:paddingTop="15dp" />
 
     <ImageView
 

@@ -40,8 +40,10 @@ import cn.ysgroup.ysdai.Activities.ArticleActivity;
 import cn.ysgroup.ysdai.Activities.CustomerActivity;
 import cn.ysgroup.ysdai.Activities.HuoDongActivity;
 import cn.ysgroup.ysdai.Activities.HuoDongDetailActivity;
+import cn.ysgroup.ysdai.Activities.LoginActivity;
 import cn.ysgroup.ysdai.Activities.PreviewOneActivity;
 import cn.ysgroup.ysdai.Activities.ShareToFriendsActivity;
+import cn.ysgroup.ysdai.Activities.WebActivity;
 import cn.ysgroup.ysdai.Application.CustomApplication;
 import cn.ysgroup.ysdai.Beans.Article.ArticleItem;
 import cn.ysgroup.ysdai.Beans.Article.ArticleList;
@@ -51,6 +53,7 @@ import cn.ysgroup.ysdai.UI.MarqueeTextView;
 import cn.ysgroup.ysdai.UI.MyRefresh;
 import cn.ysgroup.ysdai.UI.SlideShowView;
 import cn.ysgroup.ysdai.Util.AppConstants;
+import cn.ysgroup.ysdai.Util.UserConfig;
 import cn.ysgroup.ysdai.Util.Utils;
 
 
@@ -87,13 +90,13 @@ public class HomePageFragment extends BaseFragment implements SlideShowView.OnIm
     DecimalFormat df1 = new DecimalFormat("#0.0");
     private Gson gson = new Gson();
     private boolean isDown = true;
-    private boolean ismove=false;//手指是否在滑动
+    private boolean ismove = false;//手指是否在滑动
 
     private Handler mHandler = new Handler() {
 
         public void handleMessage(Message msg) {
 
-            switch (msg.what){
+            switch (msg.what) {
 
                 case 0x111:
                     remaining.setText(df.format(Utils.str2Double(indexBean.getIndexBorrow().getBalance())) + "元");
@@ -114,7 +117,7 @@ public class HomePageFragment extends BaseFragment implements SlideShowView.OnIm
                     pAccount.setText(accountInt + "元");
 
 //          pLowest.setText(indexBean.getIndexBorrow().getLowestAccount());
-                    peroid.setText(Utils.str2Int(indexBean.getIndexBorrow().getTimeLimit())+ "天");
+                    peroid.setText(Utils.str2Int(indexBean.getIndexBorrow().getTimeLimit()) + "天");
                     List<String> imgUrlList = new ArrayList<String>();
                     for (IndexBean.IndexImageItemListBean item : indexBean.getIndexImageItemList()) {
                         //图片url
@@ -129,7 +132,6 @@ public class HomePageFragment extends BaseFragment implements SlideShowView.OnIm
                     }
 
 
-
                     people_count.setText(indexBean.getTotalUserNum() + " ");
                     project_count.setText(indexBean.getTotalTenderMoney() + " ");
 
@@ -140,7 +142,7 @@ public class HomePageFragment extends BaseFragment implements SlideShowView.OnIm
                             + "—" + sdf.format(new Date(indexBean.getActivity().getEndTime())));
                     break;
                 case 0x222:
-                    if(!ismove){
+                    if (!ismove) {
                         marqueeView.start();
                     }
                     break;
@@ -276,7 +278,7 @@ public class HomePageFragment extends BaseFragment implements SlideShowView.OnIm
                 int ea = event.getAction();
                 switch (ea) {
                     case MotionEvent.ACTION_DOWN: // 按下
-                        ismove=true;
+                        ismove = true;
                         tabHeight = Utils.dip2px(activity, 60);
                         startTime = System.currentTimeMillis();
                         isDown = false;
@@ -308,9 +310,9 @@ public class HomePageFragment extends BaseFragment implements SlideShowView.OnIm
                             top = 0;
                             bottom = top + v.getHeight();
                         }
-                        if (bottom > (screenHeight-tabHeight-v.getHeight()/2)) {
-                            bottom = screenHeight-tabHeight-v.getHeight()/2;
-                            top = screenHeight-tabHeight-v.getHeight()-v.getHeight()/2;
+                        if (bottom > (screenHeight - tabHeight - v.getHeight() / 2)) {
+                            bottom = screenHeight - tabHeight - v.getHeight() / 2;
+                            top = screenHeight - tabHeight - v.getHeight() - v.getHeight() / 2;
                         }
                         v.layout(left, top, right, bottom);
                         // Toast.makeText(getActivity(), "position：" + left + ", " +
@@ -321,7 +323,7 @@ public class HomePageFragment extends BaseFragment implements SlideShowView.OnIm
                         lastY = (int) event.getRawY();
                         break;
                     case MotionEvent.ACTION_UP: // 抬起
-                        ismove=false;
+                        ismove = false;
                         RelativeLayout.LayoutParams lpFeedback = new RelativeLayout.LayoutParams(
                                 Utils.dip2px(activity, 39),
                                 Utils.dip2px(activity, 40));
@@ -331,7 +333,7 @@ public class HomePageFragment extends BaseFragment implements SlideShowView.OnIm
                         v.setLayoutParams(lpFeedback);
                         slideShowView.startPlay();
 
-                        mHandler.sendEmptyMessageDelayed(0x222,1500);
+                        mHandler.sendEmptyMessageDelayed(0x222, 1500);
                         if (System.currentTimeMillis() - startTime < 200) {
                             isDown = true;
                         } else {
@@ -397,7 +399,7 @@ public class HomePageFragment extends BaseFragment implements SlideShowView.OnIm
             public void onResponse(final Response response) throws IOException {
                 final String s = response.body().string();
                 Log.i(TAG, s);
-                try{
+                try {
                     indexBean = gson.fromJson(s, IndexBean.class);
                     activity.runOnUiThread(new Runnable() {
                         @Override
@@ -412,11 +414,11 @@ public class HomePageFragment extends BaseFragment implements SlideShowView.OnIm
                             }
                         }
                     });
-                }catch (Exception e){
+                } catch (Exception e) {
                     activity.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            Toast.makeText(activity,"服务器维护中.....",Toast.LENGTH_SHORT).show();
+                            Toast.makeText(activity, "服务器维护中.....", Toast.LENGTH_SHORT).show();
                         }
                     });
                 }
@@ -493,11 +495,11 @@ public class HomePageFragment extends BaseFragment implements SlideShowView.OnIm
                             });
                         }
                     });
-                }catch (Exception e){
+                } catch (Exception e) {
                     activity.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            Toast.makeText(activity,"服务器维护中.....",Toast.LENGTH_SHORT).show();
+                            Toast.makeText(activity, "服务器维护中.....", Toast.LENGTH_SHORT).show();
                         }
                     });
                 }
@@ -508,6 +510,12 @@ public class HomePageFragment extends BaseFragment implements SlideShowView.OnIm
 
     @Override
     public void onItemClick(int position) {
+        if (!UserConfig.getInstance().getIsLogin()) {
+            Intent it = new Intent(activity, LoginActivity.class);
+            activity.startActivity(it);
+            return;
+        }
+
         Intent intent = new Intent();
         String urlString = "";
         if (targetUrllist.size() > 3) {
@@ -537,6 +545,9 @@ public class HomePageFragment extends BaseFragment implements SlideShowView.OnIm
 
             intent.putExtra("header", "活动详情");
             intent.putExtra("id", articleId);
+        } else if (urlString.contains("https://")) {
+            intent.setClass(activity, WebActivity.class);
+            intent.putExtra("url", urlString);
         } else {
             System.out.println("-------------------------no click--------------------------------");
             return;

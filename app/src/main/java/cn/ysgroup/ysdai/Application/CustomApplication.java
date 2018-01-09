@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.util.Map;
 
 import cn.jpush.android.api.JPushInterface;
+import cn.ysgroup.ysdai.Util.UserConfig;
 
 /**
  * Created by Administrator on 2015/10/26.
@@ -83,7 +84,7 @@ public class CustomApplication extends Application {
 //            public void onFailure(int code, String message) {
 //            }
 //        });
-
+        UserConfig.getInstance().init(this);
         MobclickAgent.setScenarioType(this, MobclickAgent.EScenarioType.E_UM_NORMAL);
     }
 

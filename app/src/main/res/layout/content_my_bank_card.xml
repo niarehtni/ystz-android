@@ -105,7 +105,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="20dp"
-                android:text="如需更换银行卡或银行卡预留手机号码，请联系客服热线：400-057-7820"
+                android:text="如需更换银行卡或银行卡预留手机号码，请联系客服热线：400-856-0788"
                 android:textColor="@color/colorGrey"
                 android:textSize="14dp" />
         </LinearLayout>

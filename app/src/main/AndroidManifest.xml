@@ -397,6 +397,10 @@
             android:name="cn.ysgroup.ysdai.Activities.SplashActivity"
             android:launchMode="singleTask"
             android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name="cn.ysgroup.ysdai.Activities.WebActivity"
+            android:launchMode="singleTask"
+            android:theme="@style/AppTheme.NoActionBar" />
 
         <!-- jpush配置 -->
         <!-- Required SDK核心功能 -->

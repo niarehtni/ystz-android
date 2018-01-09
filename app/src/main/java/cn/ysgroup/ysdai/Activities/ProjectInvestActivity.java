@@ -57,6 +57,7 @@ import cn.ysgroup.ysdai.UI.MessageDialog;
 import cn.ysgroup.ysdai.UI.TopUpDialog;
 import cn.ysgroup.ysdai.Util.AppConstants;
 import cn.ysgroup.ysdai.Util.PreferenceUtil;
+import cn.ysgroup.ysdai.Util.UserConfig;
 import cn.ysgroup.ysdai.Util.Utils;
 
 public class ProjectInvestActivity extends MyBaseActivity {
@@ -166,7 +167,8 @@ public class ProjectInvestActivity extends MyBaseActivity {
 
         peroid.setText(getIntent().getStringExtra("mData") + "%");
         date.setText(getIntent().getStringExtra("timeLimit"));
-        isBund = getIntent().getBooleanExtra("isBund", false);
+        //isBund = getIntent().getBooleanExtra("isBund", false);
+
         isBundVerify = getIntent().getBooleanExtra("isBundVerify", false);
         if (!(isBund && isBundVerify)) {
             ll_password.setVisibility(View.GONE);
@@ -195,6 +197,7 @@ public class ProjectInvestActivity extends MyBaseActivity {
 
     public void onResume() {
         super.onResume();
+        isBund = UserConfig.getInstance().getIsBind();
         MobclickAgent.onResume(this);
     }
 
@@ -456,7 +459,9 @@ public class ProjectInvestActivity extends MyBaseActivity {
                                     top_up.setText("0元");
                                     projectInvestHbMoney.setText("0元");
                                 }
-
+                                String s1 = projectInvestTenderMoney.getText().toString();
+                                String s2 = getIntent().getStringExtra("mData");
+                                String s3 = getIntent().getStringExtra("timeLimit");
                                 //预期收益
                                 String exceptS = df1.format(Utils.str2Float(projectInvestTenderMoney.getText().toString()) *
                                         (Utils.str2Float(getIntent().getStringExtra("mData")) / 100) *
@@ -605,6 +610,7 @@ public class ProjectInvestActivity extends MyBaseActivity {
         call.enqueue(new Callback() {
             @Override
             public void onFailure(Request request, final IOException e) {
+                String s = "";
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {

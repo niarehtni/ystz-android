@@ -34,7 +34,7 @@ public class CustomerDialog extends Dialog {
         call.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:4000577820"));
+                Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:4008560788"));
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 context.startActivity(intent);
             }

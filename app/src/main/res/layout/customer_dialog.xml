@@ -23,7 +23,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="10dp"
-        android:text="400-057-7820"
+        android:text="400-856-0788"
         android:textColor="@color/colorBlack"
         android:textSize="@dimen/s14" />
 

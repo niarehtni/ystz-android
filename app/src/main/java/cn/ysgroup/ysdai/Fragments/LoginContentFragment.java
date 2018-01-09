@@ -68,6 +68,7 @@ import cn.ysgroup.ysdai.Util.AppConstants;
 import cn.ysgroup.ysdai.Util.BitmapCache;
 import cn.ysgroup.ysdai.Util.PreferenceUtil;
 import cn.ysgroup.ysdai.Util.UploadUtil;
+import cn.ysgroup.ysdai.Util.UserConfig;
 import cn.ysgroup.ysdai.Util.Utils;
 
 
@@ -85,7 +86,7 @@ public class LoginContentFragment extends BaseFragment implements UploadUtil.OnU
     private TextView shouyiMoney;//累计收益
     private TextView chargeAndCash;
     private TextView chargeAndcharge;
-//    private LinearLayout hongBaoReward;
+    //    private LinearLayout hongBaoReward;
     private LinearLayout moneyRecord;
     private LinearLayout investRecordLayout;
     private LinearLayout moneyBackRecordLayout;
@@ -113,7 +114,6 @@ public class LoginContentFragment extends BaseFragment implements UploadUtil.OnU
                     updateViewClick(userStatusBean, userCenterBean.getUsername());
                     if (userStatusBean.getRealStatus() != null && userStatusBean.getRealStatus().intValue() == 1) {
                     }
-
                     break;
                 case 0x400:
                     //设置头像
@@ -150,7 +150,7 @@ public class LoginContentFragment extends BaseFragment implements UploadUtil.OnU
     private RelativeLayout friend;
     private Activity activity;
     private View rootView;
-    private IconFontTextView icon;
+    private TextView icon;
     private SharedPreferences preferences;
     public boolean isFirst = true;
     private TextView today;
@@ -238,19 +238,19 @@ public class LoginContentFragment extends BaseFragment implements UploadUtil.OnU
         friend = (RelativeLayout) rootView.findViewById(R.id.login_my_friend);
         investRecordLayout = (LinearLayout) rootView.findViewById(R.id.login_content_invest_record);
         moneyBackRecordLayout = (LinearLayout) rootView.findViewById(R.id.login_content_money_back);
-        icon = (IconFontTextView) rootView.findViewById(R.id.main_toolbar_right_icon);
+        icon = (TextView) rootView.findViewById(R.id.main_toolbar_right_icon);
         chargeAndcharge = (TextView) rootView.findViewById(R.id.login_content_table_row_charge);
         hongbao = (LinearLayout) rootView.findViewById(R.id.login_content_invest_hongbao);
         chargeAndCash = (TextView) rootView.findViewById(R.id.login_content_table_row_cash);
         hongbao_count = (TextView) rootView.findViewById(R.id.login_content_invest_hongbao_count);
-        award_count = (TextView) rootView.findViewById(R.id.login_content_invest_award_count);
+        //award_count = (TextView) rootView.findViewById(R.id.login_content_invest_award_count);
         invest_count = (TextView) rootView.findViewById(R.id.login_content_invest_invest_count);
         invest_money_count = (TextView) rootView.findViewById(R.id.login_content_invest_money_count);
         back_money_count = (TextView) rootView.findViewById(R.id.login_content_back_money_count);
 //        hongBaoReward = (LinearLayout) rootView.findViewById(R.id.login_content_table_row_reward);
         moneyRecord = (LinearLayout) rootView.findViewById(R.id.login_content_table_row_money_record);
         allProrert = (LinearLayout) rootView.findViewById(R.id.login_content_today_layout);
-        reward = (LinearLayout) rootView.findViewById(R.id.login_content_invest_reward);
+        //reward = (LinearLayout) rootView.findViewById(R.id.login_content_invest_reward);
     }
 
     public void updateViews(UserCenterBean resultBack) {
@@ -385,12 +385,12 @@ public class LoginContentFragment extends BaseFragment implements UploadUtil.OnU
                 activity.startActivity(new Intent(activity, HongBaoActivity.class));
             }
         });
-        reward.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                activity.startActivity(new Intent(activity, RewardActivity.class));
-            }
-        });
+//        reward.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                activity.startActivity(new Intent(activity, RewardActivity.class));
+//            }
+//        });
     }
 
     public void RequestForUserCenter(String url) {
@@ -428,7 +428,7 @@ public class LoginContentFragment extends BaseFragment implements UploadUtil.OnU
             public void onResponse(final Response response) throws IOException {
                 String s = response.body().string();
                 Log.i(TAG, s);
-                try{
+                try {
                     final UserCenterBean resultBack = new Gson().fromJson(s, UserCenterBean.class);
                     activity.runOnUiThread(new Runnable() {
                         @Override
@@ -458,8 +458,7 @@ public class LoginContentFragment extends BaseFragment implements UploadUtil.OnU
                             }
                         }
                     });
-                }
-                catch (Exception e){
+                } catch (Exception e) {
                     Log.e(TAG, e.toString());
                 }
             }
@@ -728,21 +727,21 @@ public class LoginContentFragment extends BaseFragment implements UploadUtil.OnU
                     public void run() {
                         if (principalBeen.getRcd().equals("R0001")) {
                             today.setText(principalBeen.getTotal() + "");
-                            investMOney.setText(principalBeen.getInvestorCollectionCapital() + Math.abs(principalBeen.getUnableMoneyTz())+"");
+                            investMOney.setText(principalBeen.getInvestorCollectionCapital() + Math.abs(principalBeen.getUnableMoneyTz()) + "");
                             payBackMoney.setText(principalBeen.getAbleMoney() + "");
 
-                            String hongbao_countS="<font color='#FF0000'>"+principalBeen.getHbNum()+"</font>"+"个可用红包";
-                            String award_countS="<font color='#FF0000'>"+principalBeen.getJljlNum()+"</font>"+"条新记录";
-                            String invest_countS="<font color='#FF0000'>"+principalBeen.getTzNum()+"</font>"+"条在投记录";
-                            String invest_money_countS="<font color='#FF0000'>"+principalBeen.getZjjlNum()+"</font>"+"条新记录";
+                            String hongbao_countS = "<font color='#FF0000'>" + principalBeen.getHbNum() + "</font>" + "个可用红包";
+                            String award_countS = "<font color='#FF0000'>" + principalBeen.getJljlNum() + "</font>" + "条新记录";
+                            String invest_countS = "<font color='#FF0000'>" + principalBeen.getTzNum() + "</font>" + "条在投记录";
+                            String invest_money_countS = "<font color='#FF0000'>" + principalBeen.getZjjlNum() + "</font>" + "条新记录";
 
 
                             int dhkNum = Utils.str2Int(principalBeen.getDhkjlNum());
-                            String back_money_countS="<font color='#FF0000'>"+dhkNum+"</font>"+"条待回款记录";
+                            String back_money_countS = "<font color='#FF0000'>" + dhkNum + "</font>" + "条待回款记录";
 
 
                             hongbao_count.setText(Html.fromHtml(hongbao_countS));
-                            award_count.setText(Html.fromHtml(award_countS));
+                           // award_count.setText(Html.fromHtml(award_countS));
                             invest_count.setText(Html.fromHtml(invest_countS));
                             invest_money_count.setText(Html.fromHtml(invest_money_countS));
                             back_money_count.setText(Html.fromHtml(back_money_countS));

@@ -98,7 +98,7 @@
                     android:layout_marginLeft="5dp"
                     android:text="0.00"
                     android:textColor="#ef3e44"
-                    android:textSize="28dp" />
+                    android:textSize="26dp" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -110,11 +110,11 @@
 
                 <TextView
                     android:id="@+id/list_item_award_apr"
-                    android:layout_width="55dp"
+                    android:layout_width="50dp"
                     android:layout_height="18dp"
                     android:layout_marginLeft="3dp"
                     android:background="@mipmap/pupo_red"
-                    android:paddingLeft="10dp"
+                    android:paddingLeft="6dp"
                     android:paddingRight="2dp"
                     android:text=""
                     android:textColor="@color/colorWhite"

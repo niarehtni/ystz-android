@@ -92,37 +92,37 @@ public class ArticleListActivity extends MyBaseActivity implements LoadMoreListV
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         ArticleItem item = articleItemList.get(position);
-        if(type.equals("app_help_center")){
-            TextView help = (TextView) view.findViewById(R.id.article_list_help_tx);
-            ImageView iv = (ImageView) view.findViewById(R.id.article_list_iv);
-            RelativeLayout.LayoutParams params=
-                    new RelativeLayout.LayoutParams(Utils.dip2px(ArticleListActivity.this,15),
-                            Utils.dip2px(ArticleListActivity.this,8));
-            params.addRule(RelativeLayout.CENTER_IN_PARENT);
-            params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-            params.rightMargin=Utils.dip2px(ArticleListActivity.this,15);
-            iv.setLayoutParams(params);
-            if(item.isOpen){
-                //关闭
-                item.isOpen=false;
-                help.setVisibility(View.GONE);
-                iv.setBackgroundResource(R.mipmap.drow_icon);
-                help=null;
-                iv=null;
-            }else {
-                //打开
-                item.isOpen=true;
-                help.setVisibility(View.VISIBLE);
-                iv.setBackgroundResource(R.mipmap.up_icon);
-                help=null;
-                iv=null;
-            }
-        }else{
+//        if(type.equals("app_help_center")){
+//            TextView help = (TextView) view.findViewById(R.id.article_list_help_tx);
+//            ImageView iv = (ImageView) view.findViewById(R.id.article_list_iv);
+//            RelativeLayout.LayoutParams params=
+//                    new RelativeLayout.LayoutParams(Utils.dip2px(ArticleListActivity.this,15),
+//                            Utils.dip2px(ArticleListActivity.this,8));
+//            params.addRule(RelativeLayout.CENTER_IN_PARENT);
+//            params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+//            params.rightMargin=Utils.dip2px(ArticleListActivity.this,15);
+//            iv.setLayoutParams(params);
+//            if(item.isOpen){
+//                //关闭
+//                item.isOpen=false;
+//                help.setVisibility(View.GONE);
+//                iv.setBackgroundResource(R.mipmap.drow_icon);
+//                help=null;
+//                iv=null;
+//            }else {
+//                //打开
+//                item.isOpen=true;
+//                help.setVisibility(View.VISIBLE);
+//                iv.setBackgroundResource(R.mipmap.up_icon);
+//                help=null;
+//                iv=null;
+//            }
+//        }else{
             Intent intent = new Intent(ArticleListActivity.this, ArticleActivity.class);
             intent.putExtra("id",item.getId()+"");
             intent.putExtra("header",title);
             startActivity(intent);
-        }
+        //}
 
 
     }

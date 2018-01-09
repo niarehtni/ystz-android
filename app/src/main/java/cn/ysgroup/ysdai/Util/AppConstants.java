@@ -8,12 +8,14 @@ public  class AppConstants {
 //
       public static final String URL_SUFFIX ="https://www.yueshanggroup.cn/api";
       public static final String IMG_URL_SUFFIX="https://www.yueshanggroup.cn/mobile";
-      private static final String API_PATH_PREFIX = URL_SUFFIX + "/rest";
+
 
       public static final String JPUSH_TAG_ALL = "tag_all"; //全平台推送 不区分单个用户的推送
 
       //测试
-//      public static final String URL_SUFFIX ="http://192.168.0.215:8080";
+    //  public static final String URL_SUFFIX ="http://192.168.2.224:8080";
+    //  public static final String URL_SUFFIX ="http://192.168.2.69:8080";
+      private static final String API_PATH_PREFIX = URL_SUFFIX + "/rest";
 //      public static final String IMG_URL_SUFFIX="http://192.168.0.215:8080/mobile";
 //
 //      public static final String URL_SUFFIX ="http://160836c5u5.iok.la:9988";
