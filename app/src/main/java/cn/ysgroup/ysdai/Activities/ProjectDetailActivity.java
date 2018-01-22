@@ -93,15 +93,15 @@ public class ProjectDetailActivity extends MyBaseActivity {
     }
 
     private void initView() {
-        titleS = new String[]{"项目描述", "投资记录"};//"材料公示",
+        titleS = new String[]{"项目描述", "材料公示","投资记录"};//"材料公示",
         al = new ArrayList<Fragment>();
         id = intent.getIntExtra("id", 10000);
         ProjectDescribeFragment projectDescribeFragment = new ProjectDescribeFragment(id);
         String borrowImg = intent.getStringExtra("borrowImg");
-        MaterialFragment materialFragment = new MaterialFragment(borrowImg);
+        MaterialFragment materialFragment = new MaterialFragment(id);
         InvestFragment investFragment = new InvestFragment(id);
         al.add(projectDescribeFragment);
-        //al.add(materialFragment);
+        al.add(materialFragment);
         al.add(investFragment);
 
         tab = (TabLayout) findViewById(R.id.project_detail_tab);

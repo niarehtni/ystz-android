@@ -1,23 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    android:orientation="vertical"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:showIn="@layout/activity_project_tender_record"
-    tools:context="cn.ysgroup.ysdai.Activities.ProjectTenderRecordActivity">
+    tools:context="cn.ysgroup.ysdai.Activities.ProjectTenderRecordActivity"
+    tools:showIn="@layout/activity_project_tender_record">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingBottom="10dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:paddingTop="10dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="排行榜"
+            android:textColor="#999999"
+            android:textSize="14dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:text="数据每5分钟跟新一次"
+            android:textColor="#999999"
+            android:textSize="12dp" />
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="#333333" />
+
+    <ListView
+        android:id="@+id/rank_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scrollbars="none"></ListView>
 
     <RelativeLayout
         android:id="@+id/tender_record_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="5dp"
-        android:paddingBottom="5dp"
         android:background="@color/colorBackgroundWhite"
-        >
+        android:paddingBottom="5dp"
+        android:paddingTop="5dp">
 
         <TextView
             android:layout_width="wrap_content"
@@ -26,8 +61,7 @@
             android:layout_marginLeft="20dp"
             android:text="投资人/时间"
             android:textColor="@color/colorGrey"
-            android:textSize="15dp"
-            />
+            android:textSize="15dp" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -36,49 +70,49 @@
             android:layout_marginRight="20dp"
             android:text="金额(元)"
             android:textColor="@color/colorGrey"
-            android:textSize="15dp"
-            />
+            android:textSize="15dp" />
     </RelativeLayout>
+
     <RelativeLayout
-        android:layout_marginBottom="50dp"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-    <android.support.v4.widget.SwipeRefreshLayout
-        android:id="@+id/tender_record_swip_layout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-    </android.support.v4.widget.SwipeRefreshLayout>
-
-    <ImageView
-        android:id="@+id/tender_record_nothing_img"
-        android:layout_width="160dp"
-        android:layout_height="160dp"
-        android:src="@mipmap/list_nothing"
-        android:layout_centerInParent="true"
-        android:layout_marginTop="100dp"
-        android:layout_centerHorizontal="true"
-        android:visibility="gone"
-        />
-
-    <cn.ysgroup.ysdai.UI.LoadMoreListView
-        android:id="@+id/tender_record_list_view"
-        style="@style/scrollbar_shape_style"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:divider="#DDDDDD"
-        android:dividerHeight="1px"
-        android:fadingEdge="none"
-        android:fastScrollEnabled="false"
-        android:footerDividersEnabled="false"
-        android:headerDividersEnabled="false"
-        android:scrollbarSize="5dp"
-        android:scrollbarStyle="outsideInset"
-        android:smoothScrollbar="true"
-        android:layout_alignParentBottom="true"
-        android:layout_toRightOf="@+id/tender_record_nothing_img"
-        android:layout_toEndOf="@+id/tender_record_nothing_img">
+        android:layout_marginBottom="50dp">
 
-    </cn.ysgroup.ysdai.UI.LoadMoreListView>
+        <android.support.v4.widget.SwipeRefreshLayout
+            android:id="@+id/tender_record_swip_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        </android.support.v4.widget.SwipeRefreshLayout>
+
+        <ImageView
+            android:id="@+id/tender_record_nothing_img"
+            android:layout_width="160dp"
+            android:layout_height="160dp"
+            android:layout_centerHorizontal="true"
+            android:layout_centerInParent="true"
+            android:layout_marginTop="100dp"
+            android:src="@mipmap/list_nothing"
+            android:visibility="gone" />
+
+        <cn.ysgroup.ysdai.UI.LoadMoreListView
+            android:id="@+id/tender_record_list_view"
+            style="@style/scrollbar_shape_style"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentBottom="true"
+            android:layout_toEndOf="@+id/tender_record_nothing_img"
+            android:layout_toRightOf="@+id/tender_record_nothing_img"
+            android:divider="#DDDDDD"
+            android:dividerHeight="1px"
+            android:fadingEdge="none"
+            android:fastScrollEnabled="false"
+            android:footerDividersEnabled="false"
+            android:headerDividersEnabled="false"
+            android:scrollbarSize="5dp"
+            android:scrollbarStyle="outsideInset"
+            android:smoothScrollbar="true">
+
+        </cn.ysgroup.ysdai.UI.LoadMoreListView>
     </RelativeLayout>
 </LinearLayout>

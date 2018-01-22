@@ -1,6 +1,7 @@
 package cn.ysgroup.ysdai.Fragments;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -12,17 +13,24 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
+
 import cn.ysgroup.ysdai.Adapters.ProjectTenderRecordListAdapter;
+import cn.ysgroup.ysdai.Adapters.RankListAdapter;
+import cn.ysgroup.ysdai.Beans.Borrow.BorrowBean;
 import cn.ysgroup.ysdai.Beans.Borrow.BorrowTenderItem;
 import cn.ysgroup.ysdai.Beans.Borrow.BorrowTenderList;
+import cn.ysgroup.ysdai.Beans.Borrow.RankBean;
+import cn.ysgroup.ysdai.Beans.Borrow.RankListBean;
 import cn.ysgroup.ysdai.R;
 import cn.ysgroup.ysdai.UI.LoadMoreListView;
 import cn.ysgroup.ysdai.UI.LoadingDialog;
 import cn.ysgroup.ysdai.Util.AppConstants;
 import cn.ysgroup.ysdai.Util.PreferenceUtil;
+
 import com.squareup.okhttp.Call;
 import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.FormEncodingBuilder;
@@ -46,17 +54,24 @@ public class InvestFragment extends Fragment implements LoadMoreListView.OnLoadM
     private ImageView tenderRecordNothingImg;
     private SwipeRefreshLayout tenderRecordSwipLayout;
     private LoadMoreListView tenderRecordListView;
+    private ListView mListView;
+    private Context mContext;
+
     private String TAG = "投资记录";
     String basicUrl = AppConstants.URL_SUFFIX + "/rest/borrowTenderList";
+    String rankUrl = AppConstants.URL_SUFFIX + "/rest/richList";
 
     private BorrowTenderList resultBean;
     private ProjectTenderRecordListAdapter mAdapter;
+    private RankListAdapter mRankAdapter;
     private List<BorrowTenderItem> tenderList = new ArrayList<BorrowTenderItem>();
     private LoadingDialog loadingDialog;
 
     private final int PAGESIZE = 10;//一页的条目数
     private int totalPageCount;//总页数
     private int currentBottomPageIndex = 1;//已经加载的页数
+
+    private List<RankBean> mRankBeanList;
 
     private Handler mHandler = new Handler() {
 
@@ -79,6 +94,20 @@ public class InvestFragment extends Fragment implements LoadMoreListView.OnLoadM
                     mAdapter.setTenderList(tenderList);
                     mAdapter.notifyDataSetChanged();
                     break;
+                case 0x333:
+                    if (msg.obj == null)
+                        return;
+                    try {
+                        String rankResult = msg.obj.toString();
+                        RankListBean rankList = JSON.parseObject(rankResult, RankListBean.class);
+                        mRankBeanList = rankList.getRichList();
+                        if (mRankBeanList == null)
+                            return;
+                        mRankAdapter.notifyDataSetChanged(mRankBeanList);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    break;
             }
         }
     };
@@ -90,6 +119,13 @@ public class InvestFragment extends Fragment implements LoadMoreListView.OnLoadM
     @SuppressLint({"NewApi", "ValidFragment"})
     public InvestFragment(int id) {
         this.id = id;
+    }
+
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        this.mContext = context;
     }
 
     @Nullable
@@ -104,17 +140,25 @@ public class InvestFragment extends Fragment implements LoadMoreListView.OnLoadM
     }
 
     private void initView() {
+        mListView = (ListView) view.findViewById(R.id.rank_list);
         tenderRecordListView = (LoadMoreListView) view.findViewById(R.id.tender_record_list_view);
         tenderRecordSwipLayout = (SwipeRefreshLayout) view.findViewById(R.id.tender_record_swip_layout);
         tenderRecordNothingImg = (ImageView) view.findViewById(R.id.tender_record_nothing_img);
     }
 
     private void initDate() {
+        if (mRankBeanList == null)
+            mRankBeanList = new ArrayList<>();
+        mRankAdapter = new RankListAdapter(mContext, mRankBeanList);
+        mListView.setAdapter(mRankAdapter);
+
         mAdapter = new ProjectTenderRecordListAdapter(getActivity(), new ArrayList<BorrowTenderItem>(), getActivity().getLayoutInflater(), "0");
         tenderRecordListView.setAdapter(mAdapter);
         tenderRecordSwipLayout.setOnRefreshListener(this);
         tenderRecordListView.setLoadMoreListen(this);
         tenderRecordSwipLayout.setColorSchemeResources(android.R.color.holo_blue_light, android.R.color.holo_red_light, android.R.color.holo_orange_light, android.R.color.holo_green_light);
+
+        RequestForRankList(rankUrl, id);
 
         RequestForListData(basicUrl, id, 1, PAGESIZE, true);
         if (loadingDialog == null) {
@@ -125,7 +169,7 @@ public class InvestFragment extends Fragment implements LoadMoreListView.OnLoadM
     }
 
     public void RequestForListData(String basicUrl, int projectId, int pageNumber, int pageSize, final boolean refreshing) {
-        if(getActivity()==null){
+        if (getActivity() == null) {
             return;
         }
         String url = basicUrl + "/" + projectId;
@@ -206,8 +250,37 @@ public class InvestFragment extends Fragment implements LoadMoreListView.OnLoadM
                         }
                     });
                 } catch (Exception e) {
-                    Log.e("InvestFragment",e.toString());
+                    Log.e("InvestFragment", e.toString());
 
+                }
+            }
+        });
+    }
+
+    //请求网络数据
+    public void RequestForRankList(String basicUrl, int projectId) {
+        String url = basicUrl + "/" + projectId;
+        OkHttpClient client = new OkHttpClient();
+        RequestBody body = new FormEncodingBuilder().add("token", PreferenceUtil.getPrefString(mContext, "loginToken", "")).
+                build();
+        Request request = new Request.Builder().url(url).post(body).build();
+        Call call = client.newCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Request request, final IOException e) {
+
+            }
+
+            @Override
+            public void onResponse(final Response response) throws IOException {
+                String s = response.body().string();
+                try {
+                    Message msg = mHandler.obtainMessage();
+                    msg.what = 0x333;
+                    msg.obj = s;
+                    mHandler.sendMessage(msg);
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
         });

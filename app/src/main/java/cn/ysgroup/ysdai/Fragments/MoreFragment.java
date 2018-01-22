@@ -18,6 +18,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
+import android.os.Message;
 import android.os.ResultReceiver;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
@@ -37,14 +38,19 @@ import com.alibaba.fastjson.JSON;
 import cn.ysgroup.ysdai.Activities.ArticleListActivity;
 import cn.ysgroup.ysdai.Activities.CustomerActivity;
 import cn.ysgroup.ysdai.Activities.FeedBackActivity;
+import cn.ysgroup.ysdai.Activities.LoginActivity;
 import cn.ysgroup.ysdai.Activities.MainActivity;
 import cn.ysgroup.ysdai.Beans.BaseBean;
 import cn.ysgroup.ysdai.Beans.VersionBean;
+import cn.ysgroup.ysdai.Beans.userInfo.UserCenterBean;
 import cn.ysgroup.ysdai.R;
 import cn.ysgroup.ysdai.Service.UpdateService;
+import cn.ysgroup.ysdai.UI.LoadingDialog;
 import cn.ysgroup.ysdai.Util.AppConstants;
 import cn.ysgroup.ysdai.Util.AppVersionUtils;
 import cn.ysgroup.ysdai.Util.PreferenceUtil;
+
+import com.google.gson.Gson;
 import com.squareup.okhttp.Call;
 import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.FormEncodingBuilder;
@@ -207,8 +213,66 @@ public class MoreFragment extends BaseFragment {
         IntentFilter filter = new IntentFilter();
         filter.addAction("MoreBroadCast");
         activity.registerReceiver(mbc, filter);
+
+        String url = AppConstants.URL_SUFFIX + "/rest/userCenter";
+        RequestForUserCenter(url);
     }
 
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+    }
+
+    public void RequestForUserCenter(String url) {
+        //访问第二个
+        OkHttpClient client = new OkHttpClient();
+        RequestBody body = new FormEncodingBuilder().add("token", PreferenceUtil.getPrefString(activity, "loginToken", "")).
+                build();
+        Request request = new Request.Builder().url(url).post(body).build();
+        Call call = client.newCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Request request, final IOException e) {
+                activity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(activity, "请求数据失败，请检查网络！", Toast.LENGTH_SHORT).show();
+                        if (e != null && e.getMessage() != null) {
+                            Log.i(TAG, e.getMessage());
+                        }
+                    }
+                });
+            }
+
+            @Override
+            public void onResponse(final Response response) throws IOException {
+                String s = response.body().string();
+                Log.i(TAG, s);
+                try {
+                    final UserCenterBean resultBack = new Gson().fromJson(s, UserCenterBean.class);
+                    activity.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (resultBack.getRcd().equals("E0001")) {
+                                SharedPreferences preferences = activity.getSharedPreferences("AppToken", Context.MODE_PRIVATE);
+                                SharedPreferences.Editor editor = preferences.edit();
+                                //清除Token数据
+                                editor.clear().commit();
+
+                                activity.getSharedPreferences("UserId",Context.MODE_PRIVATE).edit().clear().commit();
+
+                                exit.setVisibility(View.GONE);
+                            }
+                        }
+                    });
+                } catch (Exception e) {
+                    Log.e(TAG, e.toString());
+                }
+            }
+        });
+    }
 
     //请求网络数据
     public void RequestForSatusData(String basicUrl) {

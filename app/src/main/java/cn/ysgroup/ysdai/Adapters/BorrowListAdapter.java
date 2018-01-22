@@ -91,7 +91,7 @@ public class BorrowListAdapter extends BaseAdapter {
             viewHolder.lowest = (TextView) convertView.findViewById(R.id.list_item_lowest);
             viewHolder.newerTag = (ImageView) convertView.findViewById(R.id.list_item_newer_tag);
             viewHolder.progressBar = (ProgressBar) convertView.findViewById(R.id.list_pregress);
-            viewHolder.text= (TextView) convertView.findViewById(R.id.list_bar_text);
+            viewHolder.text = (TextView) convertView.findViewById(R.id.list_bar_text);
             convertView.setTag(viewHolder);
 
         } else {
@@ -126,11 +126,13 @@ public class BorrowListAdapter extends BaseAdapter {
         viewHolder.namee.setText(item.getName());
         viewHolder.lowest.setText(df.format(Utils.str2Double(item.getBalance())) + "元");
 
-        if (item.getType().equals("16") || item.getSchedule().equals("100")) {
+        if (item.getType().equals("16") || item.getSchedule().equals("100")||item.getType().equals("20")) {
             viewHolder.newerTag.setVisibility(View.VISIBLE);
-            if(item.getType().equals("16")){
+            if (item.getType().equals("16")) {
                 viewHolder.newerTag.setBackgroundResource(R.mipmap.newer);
-            }else{
+            } else if (item.getType().equals("20")) {
+                viewHolder.newerTag.setBackgroundResource(R.mipmap.activitier);
+            } else {
                 viewHolder.newerTag.setBackgroundResource(R.mipmap.shouzhi);
             }
         } else {
@@ -140,17 +142,17 @@ public class BorrowListAdapter extends BaseAdapter {
 
 
         viewHolder.progressBar.setProgress(scheduleInt);
-        viewHolder.text.setText(scheduleInt+"%");
-        WindowManager wm = (WindowManager) context .getSystemService(Context.WINDOW_SERVICE);
+        viewHolder.text.setText(scheduleInt + "%");
+        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         float screenWidth = wm.getDefaultDisplay().getWidth();
         //bar的长度
-        viewHolder.text.measure(0,0);
-        float barWidth=screenWidth-Utils.dip2px(context,45);
-        System.out.println("scheduleInt:"+scheduleInt+"barWidth:"+barWidth+"viewHolder.text.getWidth():"+viewHolder.text.getMeasuredWidth());
-        if(scheduleInt<50){
-            viewHolder.text.setX((scheduleInt*barWidth)/100);
-        }else{
-            viewHolder.text.setX((scheduleInt*barWidth)/100-10);
+        viewHolder.text.measure(0, 0);
+        float barWidth = screenWidth - Utils.dip2px(context, 45);
+        System.out.println("scheduleInt:" + scheduleInt + "barWidth:" + barWidth + "viewHolder.text.getWidth():" + viewHolder.text.getMeasuredWidth());
+        if (scheduleInt < 50) {
+            viewHolder.text.setX((scheduleInt * barWidth) / 100);
+        } else {
+            viewHolder.text.setX((scheduleInt * barWidth) / 100 - 10);
         }
         return convertView;
     }
